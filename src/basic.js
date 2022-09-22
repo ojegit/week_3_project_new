@@ -1,6 +1,29 @@
 var dataTable = document.getElementById("data-table");
 
+createTable();
 getUsers();
+
+function createTable() {
+  //thead
+  const titleRow = ["Municipality", "Population", "Employment", "Employment-%"];
+  const tr = document.createElement("tr");
+
+  for (const e of titleRow) {
+    //Note: not "in" but "of" for arrays
+    console.log(e);
+    let th = document.createElement("th");
+    th.appendChild(document.createTextNode(e));
+    tr.appendChild(th);
+  }
+  const thead = document.createElement("thead");
+  thead.appendChild(tr);
+  dataTable.appendChild(thead);
+
+  //tbody
+  let tbody = document.createElement("tbody");
+  dataTable.appendChild(tbody);
+}
+
 async function getUsers() {
   //Municipality and population data source
   const url1 =
@@ -22,35 +45,35 @@ async function getUsers() {
   let i = 0;
   for (var key in mun) {
     //Skip first row
-    if (i > 0) {
-      let tr = document.createElement("tr");
-      let td1 = document.createElement("td");
-      let td2 = document.createElement("td");
-      let td3 = document.createElement("td");
-      let td4 = document.createElement("td");
-      td1.appendChild(document.createTextNode(mun[key]));
-      td2.appendChild(document.createTextNode(pop[i]));
-      td3.appendChild(document.createTextNode(emp[i]));
+    //if (i > 0) {
+    let tr = document.createElement("tr");
+    let td1 = document.createElement("td");
+    let td2 = document.createElement("td");
+    let td3 = document.createElement("td");
+    let td4 = document.createElement("td");
+    td1.appendChild(document.createTextNode(mun[key]));
+    td2.appendChild(document.createTextNode(pop[i]));
+    td3.appendChild(document.createTextNode(emp[i]));
 
-      //Calculcate employment pct
-      let empPct = ((100.0 * emp[i]) / pop[i]).toFixed(2);
+    //Calculcate employment pct
+    let empPct = ((100.0 * emp[i]) / pop[i]).toFixed(2);
 
-      td4.appendChild(document.createTextNode(empPct));
-      tr.appendChild(td1);
-      tr.appendChild(td2);
-      tr.appendChild(td3);
-      tr.appendChild(td4);
+    td4.appendChild(document.createTextNode(empPct));
+    tr.appendChild(td1);
+    tr.appendChild(td2);
+    tr.appendChild(td3);
+    tr.appendChild(td4);
 
-      //Set the background color based on employment pct levels
-      if (empPct < 25) {
-        tr.style.backgroundColor = "#ff9e9e";
-      } else if (empPct > 45) {
-        tr.style.backgroundColor = "#abffbd";
-      }
-
-      //Add rows to table > tbody
-      dataTable.children[1].appendChild(tr);
+    //Set the background color based on employment pct levels
+    if (empPct < 25) {
+      tr.style.backgroundColor = "#ff9e9e";
+    } else if (empPct > 45) {
+      tr.style.backgroundColor = "#abffbd";
     }
+
+    //Add rows to table > tbody
+    dataTable.children[1].appendChild(tr);
+    //}
     i++;
   }
 }
