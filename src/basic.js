@@ -1,79 +1,99 @@
-var dataTable = document.getElementById("data-table");
+import "./styles.css";
 
-createTable();
-getUsers();
-
-function createTable() {
-  //thead
-  const titleRow = ["Municipality", "Population", "Employment", "Employment-%"];
-  const tr = document.createElement("tr");
-
-  for (const e of titleRow) {
-    //Note: not "in" but "of" for arrays
-    console.log(e);
-    let th = document.createElement("th");
-    th.appendChild(document.createTextNode(e));
-    tr.appendChild(th);
-  }
-  const thead = document.createElement("thead");
-  thead.appendChild(tr);
-  dataTable.appendChild(thead);
-
-  //tbody
-  let tbody = document.createElement("tbody");
-  dataTable.appendChild(tbody);
+if (document.readyState !== "loading") {
+  // Document ready, executing
+  console.log("Document ready, executing");
+  initializeCode();
+} else {
+  document.addEventListener("DOMContentLoaded", function () {
+    // Document was not ready, executing when loaded
+    console.log("Document ready, executing after a wait");
+    initializeCode();
+  });
 }
 
-async function getUsers() {
-  //Municipality and population data source
-  const url1 =
-    "https://statfin.stat.fi/PxWeb/sq/4e244893-7761-4c4f-8e55-7a8d41d86eff";
+function initializeCode() {
+  var dataTable = document.getElementById("data-table");
 
-  //Employment data source
-  const url2 =
-    "https://statfin.stat.fi/PxWeb/sq/5e288b40-f8c8-4f1e-b3b0-61b86ce5c065";
+  createTable();
+  getUsers();
 
-  const usersPromise1 = await fetch(url1);
-  const usersPromise2 = await fetch(url2);
-  const userJSON1 = await usersPromise1.json();
-  const userJSON2 = await usersPromise2.json();
+  function createTable() {
+    //thead
+    const titleRow = [
+      "Municipality",
+      "Population",
+      "Employment",
+      "Employment-%"
+    ];
+    const tr = document.createElement("tr");
 
-  var mun = userJSON1.dataset.dimension.Alue.category.label;
-  var pop = userJSON1.dataset.value;
-  var emp = userJSON2.dataset.value;
-
-  let i = 0;
-  for (var key in mun) {
-    //Skip first row
-    //if (i > 0) {
-    let tr = document.createElement("tr");
-    let td1 = document.createElement("td");
-    let td2 = document.createElement("td");
-    let td3 = document.createElement("td");
-    let td4 = document.createElement("td");
-    td1.appendChild(document.createTextNode(mun[key]));
-    td2.appendChild(document.createTextNode(pop[i]));
-    td3.appendChild(document.createTextNode(emp[i]));
-
-    //Calculcate employment pct
-    let empPct = ((100.0 * emp[i]) / pop[i]).toFixed(2);
-
-    td4.appendChild(document.createTextNode(empPct));
-    tr.appendChild(td1);
-    tr.appendChild(td2);
-    tr.appendChild(td3);
-    tr.appendChild(td4);
-
-    //Set the background color based on employment pct levels
-    if (empPct < 25) {
-      tr.style.backgroundColor = "#ff9e9e";
-    } else if (empPct > 45) {
-      tr.style.backgroundColor = "#abffbd";
+    for (const e of titleRow) {
+      //Note: not "in" but "of" for arrays
+      let th = document.createElement("th");
+      th.appendChild(document.createTextNode(e));
+      tr.appendChild(th);
     }
+    const thead = document.createElement("thead");
+    thead.appendChild(tr);
+    dataTable.appendChild(thead);
 
-    //Add rows to table > tbody
-    dataTable.children[1].appendChild(tr);
-    //}
-    i++;
+    //tbody
+    let tbody = document.createElement("tbody");
+    dataTable.appendChild(tbody);
+  }
+
+  async function getUsers() {
+    //Municipality and population data source
+    const url1 =
+      "https://statfin.stat.fi/PxWeb/sq/4e244893-7761-4c4f-8e55-7a8d41d86eff";
+
+    //Employment data source
+    const url2 =
+      "https://statfin.stat.fi/PxWeb/sq/5e288b40-f8c8-4f1e-b3b0-61b86ce5c065";
+
+    const usersPromise1 = await fetch(url1);
+    const usersPromise2 = await fetch(url2);
+    const userJSON1 = await usersPromise1.json();
+    const userJSON2 = await usersPromise2.json();
+
+    var mun = userJSON1.dataset.dimension.Alue.category.label;
+    var pop = userJSON1.dataset.value;
+    var emp = userJSON2.dataset.value;
+
+    let i = 0;
+    for (var key in mun) {
+      //Skip first row
+      //if (i > 0) {
+      let tr = document.createElement("tr");
+      let td1 = document.createElement("td");
+      let td2 = document.createElement("td");
+      let td3 = document.createElement("td");
+      let td4 = document.createElement("td");
+      td1.appendChild(document.createTextNode(mun[key]));
+      td2.appendChild(document.createTextNode(pop[i]));
+      td3.appendChild(document.createTextNode(emp[i]));
+
+      //Calculcate employment pct
+      let empPct = ((100.0 * emp[i]) / pop[i]).toFixed(2);
+
+      td4.appendChild(document.createTextNode(empPct));
+      tr.appendChild(td1);
+      tr.appendChild(td2);
+      tr.appendChild(td3);
+      tr.appendChild(td4);
+
+      //Set the background color based on employment pct levels
+      if (empPct < 25) {
+        tr.style.backgroundColor = "#ff9e9e";
+      } else if (empPct > 45) {
+        tr.style.backgroundColor = "#abffbd";
+      }
+
+      //Add rows to table > tbody
+      dataTable.children[1].appendChild(tr);
+      //}
+      i++;
+    }
   }
 }
