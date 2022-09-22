@@ -1,6 +1,29 @@
 var dataTable = document.getElementById("data-table");
 
+createTable();
 getUsers();
+
+function createTable() {
+  //thead
+  const titleRow = ["Municipality", "Population", "Employment", "Employment-%"];
+  const tr = document.createElement("tr");
+
+  for (const e of titleRow) {
+    //Note: not "in" but "of" for arrays
+    console.log(e);
+    let th = document.createElement("th");
+    th.appendChild(document.createTextNode(e));
+    tr.appendChild(th);
+  }
+  const thead = document.createElement("thead");
+  thead.appendChild(tr);
+  dataTable.appendChild(thead);
+
+  //tbody
+  let tbody = document.createElement("tbody");
+  dataTable.appendChild(tbody);
+}
+
 async function getUsers() {
   //Municipality and population data source
   const url1 =
